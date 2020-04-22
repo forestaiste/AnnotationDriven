@@ -20,17 +20,20 @@ public class IOCTest {
         for (String d: definitions) {
             System.out.println(d);
         }
+
+        Person p = (Person)context.getBean("person");
+        System.out.println(p.getName());
     }
 
     @Test
     public void test02() {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MainConfig2.class);
-//        String[] definitions = context.getBeanDefinitionNames();
-//
-//        for (String d: definitions) {
-//            System.out.println(d);
-//        }
-//
+        //AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MainConfig2.class);
+        String[] definitions = context.getBeanDefinitionNames();
+
+        for (String d: definitions) {
+            System.out.println(d);
+        }
+
         System.out.println("Container is created");
         Object p = context.getBean("person");
         Object p2 = context.getBean("person");

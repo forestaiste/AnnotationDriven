@@ -9,14 +9,14 @@ import org.forest.models.ColorFactoryBean;
 import org.forest.models.Person;
 import org.springframework.context.annotation.*;
 
-@Conditional({WindowsCondition.class})
+@Conditional({LinuxCondition.class})
 @Import({Color.class, MyImportSelector.class, MyImportBeanDefinitionRegistrar.class})
 @Configuration
 public class MainConfig2 {
 
     @Lazy
     @Bean("person")
-    @Scope
+    @Scope(scopeName = "prototype")
     public Person person() {
         System.out.println("Add person into container");
 
