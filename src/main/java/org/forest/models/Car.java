@@ -1,5 +1,8 @@
 package org.forest.models;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Car {
 
     public Car() {

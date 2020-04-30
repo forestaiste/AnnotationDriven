@@ -20,19 +20,19 @@ public class MainConfig2 {
     public Person person() {
         System.out.println("Add person into container");
 
-        return new Person("zhangsan", 25);
+        return new Person("zhangsan", 25, "hans");
     }
 
     @Conditional({WindowsCondition.class})
     @Bean("bill")
     public Person person01() {
-        return  new Person("Bill Gates", 62);
+        return  new Person("Bill Gates", 62, "Bill");
     }
 
     @Conditional({LinuxCondition.class})
     @Bean("linus")
     public Person person02() {
-        return  new Person("linus", 42);
+        return  new Person("linus", 42, "linux");
     }
 
     @Bean

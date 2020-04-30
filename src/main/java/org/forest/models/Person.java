@@ -1,14 +1,25 @@
 package org.forest.models;
 
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class Person {
 
+    @Value("zhangsan")
     private String name;
+    @Value("#{20 - 2}")
     private Integer age;
+    @Value("${nickName}")
+    private String nickName;
 
-    public Person(String name, Integer age) {
+    public Person() {
+        super();
+    }
+
+    public Person(String name, Integer age, String nickName) {
         this.name = name;
         this.age = age;
+        this.nickName = nickName;
     }
 
     public String getName() {
@@ -27,11 +38,20 @@ public class Person {
         this.age = age;
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
     @Override
     public String toString() {
         return "Person{" +
                 "name='" + name + '\'' +
                 ", age=" + age +
+                ", nickName='" + nickName + '\'' +
                 '}';
     }
 }

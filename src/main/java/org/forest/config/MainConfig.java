@@ -1,15 +1,10 @@
 package org.forest.config;
 
 import org.forest.models.Person;
-import org.forest.service.BookService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
-
-import java.security.Provider;
 
 @Configuration
 @ComponentScan(value = "org.forest", useDefaultFilters =  false, includeFilters = {
@@ -20,7 +15,7 @@ import java.security.Provider;
 public class MainConfig {
     @Bean
     public Person person() {
-        return new Person("LiSi", 20);
+        return new Person("LiSi", 20, "Tom");
     }
 }
 
