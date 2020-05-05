@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 public class Person {
 
     @Value("zhangsan")
-    private String name;
+    private String chineseName;
     @Value("#{20 - 2}")
     private Integer age;
     @Value("${nickName}")
@@ -17,17 +17,17 @@ public class Person {
     }
 
     public Person(String name, Integer age, String nickName) {
-        this.name = name;
+        this.chineseName = name;
         this.age = age;
         this.nickName = nickName;
     }
 
-    public String getName() {
-        return name;
+    public String getChineseName() {
+        return chineseName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setChineseName(String chineseName) {
+        this.chineseName = chineseName;
     }
 
     public Integer getAge() {
@@ -49,7 +49,7 @@ public class Person {
     @Override
     public String toString() {
         return "Person{" +
-                "name='" + name + '\'' +
+                "name='" + chineseName + '\'' +
                 ", age=" + age +
                 ", nickName='" + nickName + '\'' +
                 '}';

@@ -11,7 +11,7 @@ public class MainTest {
 
         Person p = (Person) context.getBean(Person.class);
 
-        System.out.println(p.getName());
+        System.out.println(p.getChineseName());
 
         String[] names = context.getBeanNamesForType(Person.class);
 

@@ -12,17 +12,20 @@ import java.util.Map;
 
 public class IOCTest {
     AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MainConfig2.class);
+
     @Test
     public void test01() {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MainConfig.class);
         String[] definitions = context.getBeanDefinitionNames();
 
-        for (String d: definitions) {
+        for (String d : definitions) {
             System.out.println(d);
         }
 
-        Person p = (Person)context.getBean("person");
-        System.out.println(p.getName());
+        Person p = (Person) context.getBean("person");
+        System.out.println(p.getChineseName());
+        
+
     }
 
     @Test
@@ -30,7 +33,7 @@ public class IOCTest {
         //AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MainConfig2.class);
         String[] definitions = context.getBeanDefinitionNames();
 
-        for (String d: definitions) {
+        for (String d : definitions) {
             System.out.println(d);
         }
 
@@ -50,7 +53,7 @@ public class IOCTest {
 
         String[] names = context.getBeanNamesForType(Person.class);
 
-        for (String name: names) {
+        for (String name : names) {
             System.out.println(name);
         }
 
@@ -75,5 +78,8 @@ public class IOCTest {
 
         Object bean = context.getBean("colorFactoryBean");
         System.out.println("bean's type: " + bean.getClass());
+
     }
+
+
 }
