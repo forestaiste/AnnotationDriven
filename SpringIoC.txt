@@ -1,0 +1,9 @@
+1. 初始化Annotation和ClassPath BeanDefinition Reader,用于从注解和XML文件中读取Bean Definition。
+2. 注册Component Class，包括注解为Configuration的Config Class。特别注意，在构造函数中，可以传入多个Component Class。
+	1)解析注解Bean各种属性
+	2)使用Registry接口，注册到BeanFactory中。（GenericApplicationContext实现了BeanDefinitionRegistry接口，同时它包含了BeanFactory实例）
+３. 验证环境变量，早期的监听器和事件 - prepareRefresh
+４. 准备BeanFactory - postProcessBeanFactory(beanFactory);
+	１)设置ClassLoader等
+	２)添加ApplicationContextAwareProcessor，ApplicationListenerDetector等后置处理器
+	３)注册Enviroment等环境到BeanFactory
