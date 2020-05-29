@@ -28,7 +28,7 @@ public class Dog implements ApplicationContextAware {
     }
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-
+        System.out.println("Dog...setApplicationContext...");
         context = applicationContext;
     }
 }

@@ -1,3 +1,4 @@
+一、AnnotationConfigApplicationContext初始化工程
 1. ApplicationContext构造函数
     1)初始化Annotation和ClassPath BeanDefinition Reader,用于从注解和XML文件中读取Bean Definition
     2)在GenericApplicationContext构造函数中，创建BeanFactory（DefaultListableBeanFactory）实例
@@ -9,7 +10,7 @@
 	１)设置ClassLoader等
 	2)添加ApplicationContextAwareProcessor，ApplicationListenerDetector等后置处理器
 	３)注册Enviroment等到BeanFactory
-５. 执行postProcessBeanFactory方法，如该若ApplicationContext子类的重载了该方法
+５. 执行postProcessBeanFactory方法，如该ApplicationContext子类的重载了该方法
 ６. 调用BeanFactory的后置处理器(invokeBeanFactoryPostProcessors)
     １）按照优先级顺序调用BeanDefinitionRegistryPostProcessor的后置处理方法（BeanDefinitionRegistryPostProcessor完成更多的BeanDefinition注册）
     ２）按照优先级顺序调用BeanFactoryPostProcessor的后置处理方法
@@ -35,3 +36,26 @@
 10. 注册监听器（registerListeners）
     把各类监听器注册到多播器中
 11. 完成BeanFactory初始化，并初始化所有剩下的Singleton Bean(finishBeanFactoryInitialization)
+    1)冻结所有BeanDefinition的元数据，不再接受更改。会把已有的BeanDefinitionNames拷贝到frozenBeanDefinitionNames
+    ２)实例化所有除懒加载的Singletons
+        a)把在４.1中设置的ClassLoader Reset为null
+        b)遍历mergedBeanDefinitions，非抽象、单例、非懒加载的Bean都要实例化
+        c)已经在前面阶段显式实例化的Bean则跳过
+        d)其他需要创建的Bean实例的，但并不是只能自动创建
+            i)实现了InstantiationAwareBeanPostProcessor接口的，可以在其postProcessBeforeInstantiation完成Bean创建
+                注：(AbstractAutowireCapableBeanFactory:resolveBeforeInstantiation
+                        @AbstractAutowireCapableBeanFactory:createBean
+            ii)在Configuration类中定义的Bean，用其工厂方法初始化(AbstractAutowireCapableBeanFactory:instantiateUsingFactoryMethod），详细过程下面。
+
+
+
+
+!setFactoryBeanName(@Nullable String factoryBeanName)
+二、实例化＠Configuration里的Regular Bean
+1. 待实例化Bean在＠Configuration中有实例化的工厂方法(mbd.getFactoryMethodName())
+２.　获取factoryBean的Class
+    1)待实例化Bean有FactoryBeanName(mbd.getFactoryBeanName())，这个FactoryBeanName就是＠Configuraton的Bean Name
+    2)由FactoryBeanName获取factoryBean实例，进而由反射获取其Class
+    3)
+
+
