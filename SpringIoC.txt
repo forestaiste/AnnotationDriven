@@ -5,20 +5,20 @@
 2. 注册Component Class，包括注解为Configuration的Config Class。特别注意，在构造函数中，可以传入多个Component Class
 	1)解析注解Bean各种属性
 	2)使用Registry接口，注册到BeanFactory中。（GenericApplicationContext实现了BeanDefinitionRegistry接口，同时它包含了BeanFactory实例）
-３. 验证环境变量，早期的监听器和事件 - prepareRefresh
-４. 准备BeanFactory (prepareBeanFactory)
+3. 验证环境变量，早期的监听器和事件 - prepareRefresh
+5. 准备BeanFactory (prepareBeanFactory)
 	１)设置ClassLoader等
 	2)添加ApplicationContextAwareProcessor，ApplicationListenerDetector等后置处理器
 	3)注册Enviroment等到BeanFactory
-５. 执行postProcessBeanFactory方法，如该ApplicationContext子类的重载了该方法
-６. 调用BeanFactory的后置处理器(invokeBeanFactoryPostProcessors)
+5. 执行postProcessBeanFactory方法，如该ApplicationContext子类的重载了该方法
+6. 调用BeanFactory的后置处理器(invokeBeanFactoryPostProcessors)
     １）按照优先级顺序调用BeanDefinitionRegistryPostProcessor的后置处理方法（BeanDefinitionRegistryPostProcessor完成更多的BeanDefinition注册）
     ２）按照优先级顺序调用BeanFactoryPostProcessor的后置处理方法
     注：会有两类BeanFactoryPostProcessor
     　　a)一类是显式调用AbstractApplicationContext的addBeanFactoryPostProcessor把BeanFactoryPostProcessor加入到beanFactoryPostProcessors中。
          实际上猜不出是在哪里调用addBeanFactoryPostProcessor的，Spring内部没有任何一个地方调用这个函数。外部代码调用没有合适的地方。
        b)另一类式把BeanFactoryPostProcessor作为Bean，然后遍历BeanDefinition获取BeanFactoryPostProcessor
-７. 注册BeanProcessor（注意区分BeanFactory和Bean的后置处理器及其作用，registerBeanPostProcessors）
+7. 注册BeanProcessor（注意区分BeanFactory和Bean的后置处理器及其作用，registerBeanPostProcessors）
     1)统计BeanProcessor的数量，注意BeanProcessor来自三处。
         a)来自BeanFactory的beanPostProcessors，这些是已经在在４.2中实例化的，并加入beanPostProcessors的。
         b)来自BeanFactory的beanDefinitionNames，这些还只是解析出来BeanDefinition，还没有实例化。
@@ -29,7 +29,7 @@
         c)Regular
         d)Internal
     ３)按照优先级顺序把实例化的postProcessors注册到BeanFactory.beanPostProcessors
-８. 初始化MessageSource（initMessageSource）
+8. 初始化MessageSource（initMessageSource）
     创建MessageSource，作为Singleton注册到BeanFactory (实际管理Singleton的是DefaultSingletonBeanRegistry类，这里可以有Design的详解
 9. 初始化事件多播器（initApplicationEventMulticaster）
     创建事件多播器，作为Singleton注册到BeanFactory
@@ -78,11 +78,17 @@
         d)完成Bean的初始化，把Bean加入到DefaultSingletonBeanRegistry中HashMap中，用于以后的注入
 
 三、解析Annotation的配置
-    1)注册缺省的BeanDefinition到BeanFactory中
-        a)org.springframework.context.annotation.internalConfigurationAnnotationProcessor
-        b)org.springframework.context.annotation.internalAutowiredAnnotationProcessor
-        c)org.springframework.context.event.internalEventListenerProcessor
-        d)org.springframework.context.event.internalEventListenerFactory
+1. 注册缺省的BeanDefinition到BeanFactory中
+   1)org.springframework.context.annotation.internalConfigurationAnnotationProcessor
+   2)org.springframework.context.annotation.internalAutowiredAnnotationProcessor
+   3)org.springframework.context.event.internalEventListenerProcessor
+   4)org.springframework.context.event.internalEventListenerFactory
+2. 显示注册注解为Configuration的Config Class，BeanFactory的BeanDefinition增加到了5个(如果只有一个Config Class)
+3. 从BeanFactory中的BeanDefinition找到Config Class进行解析(ConfigurationClassParser.doProcessConfigurationClass)
+   1)Check Config Class是否有ComponentScan的Annotation，如果有则使用ComponentScanAnnotationParser进行解析
+         a)从注解中找到Package Scan的路径
+         b)在指定路径下找到所有注解有Component的Class，用这些Class生成ScannedGenericBeanDefinition实例
+         c)对生成的BeanDefinition进行后置处理，并加入到BeanFactory中
 
 
 
