@@ -97,6 +97,20 @@
             iii)普通的Class，按照＠Configuration Class处理
    3)把＠Configuration　Class里的所有Bean Method加入ConfigClass中
    4)使用ConfigurationClassBeanDefinitionReader.loadBeanDefinitions对configClasses
+         a)@Import Config Class创建AnnotatedGenericBeanDefinition实例，
+            i)设置各Attribute(Lazy, Primary, DependsOn, Role, Description)
+            ii设置Scope，ProxyMode
+            iii)把该BeanDefinition注册到BeanFactory
+         b)Config Class中的BeanMethod创建ConfigurationClassBeanDefinition实例(ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsForBeanMethod)
+            i)Bean Method如是Static Method设置BeanClass或BeanClassName，以及factoryMethodName
+            ii)Bean Method如是Regular Method，设置factoryBeanName和factoryMethodName
+                注：Bean Method的Factory Bean既是它所在的Config Class
+            iii)设置反射Factory Method
+            iv)设置该Bean的Attribute，包括(autowire, autowireCandidate, initMethod, destroyMethod, Scope, proxyMode)
+            v)把该BeanDefinition注册到BeanFactory
+         c)处理ImportedResources和ImportedBeanDefinitionRegistrars
+
+
 
 
 
