@@ -89,6 +89,15 @@
          a)从注解中找到Package Scan的路径
          b)在指定路径下找到所有注解有Component的Class，用这些Class生成ScannedGenericBeanDefinition实例
          c)对生成的BeanDefinition进行后置处理，并加入到BeanFactory中
+   2)处理在Config Class上注释了@Import的类
+   　　　 a)使用递归方法，收集所有标注了＠Import的Class
+         b)遍历所有@Import的Class处理(ConfigurationClassParser.processImports)
+            i)实现了ImportSelector的，把列表的内的Class分别处理
+            ii)实现了ImportBeanDefinitionRegistrar的
+            iii)普通的Class，按照＠Configuration Class处理
+   3)把＠Configuration　Class里的所有Bean Method加入ConfigClass中
+   4)使用ConfigurationClassBeanDefinitionReader.loadBeanDefinitions对configClasses
+
 
 
 
