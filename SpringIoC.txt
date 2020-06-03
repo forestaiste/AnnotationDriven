@@ -13,6 +13,7 @@
 5. 执行postProcessBeanFactory方法，如该ApplicationContext子类的重载了该方法
 6. 调用BeanFactory的后置处理器(invokeBeanFactoryPostProcessors)
     １）按照优先级顺序调用BeanDefinitionRegistryPostProcessor的后置处理方法（BeanDefinitionRegistryPostProcessor完成更多的BeanDefinition注册）
+        注：ConfigurationClassPostProcessor实现了BeanDefinitionRegistryPostProcessor，它作为第一个BeanDefinition加入到了BeanFactory，BeanName为org.springframework.context.annotation.internalConfigurationAnnotationProcessor
     ２）按照优先级顺序调用BeanFactoryPostProcessor的后置处理方法
     注：会有两类BeanFactoryPostProcessor
     　　a)一类是显式调用AbstractApplicationContext的addBeanFactoryPostProcessor把BeanFactoryPostProcessor加入到beanFactoryPostProcessors中。
@@ -83,7 +84,7 @@
    2)org.springframework.context.annotation.internalAutowiredAnnotationProcessor
    3)org.springframework.context.event.internalEventListenerProcessor
    4)org.springframework.context.event.internalEventListenerFactory
-2. 显示注册注解为Configuration的Config Class，BeanFactory的BeanDefinition增加到了5个(如果只有一个Config Class)
+2. 显式注册注解为Configuration的Config Class，BeanFactory的BeanDefinition增加到了5个(如果只有一个Config Class)
 3. 从BeanFactory中的BeanDefinition找到Config Class进行解析(ConfigurationClassParser.doProcessConfigurationClass)
    1)Check Config Class是否有ComponentScan的Annotation，如果有则使用ComponentScanAnnotationParser进行解析
          a)从注解中找到Package Scan的路径
@@ -109,7 +110,7 @@
             iv)设置该Bean的Attribute，包括(autowire, autowireCandidate, initMethod, destroyMethod, Scope, proxyMode)
             v)把该BeanDefinition注册到BeanFactory
          c)处理ImportedResources和ImportedBeanDefinitionRegistrars
-
+    注：@ComponentScan-@Component和@Import虽然在Spring中，处理上的流程不一样。但在生成BeanDefintion的功能上跟@Configuration具有可比性。它们三者都能在类里使用Bean Method来声明Bean.
 
 
 
