@@ -52,7 +52,7 @@
 
 
 
-二、实例化＠Configuration里的Regular Bean
+二、实例化＠Configuration里的Regular Bean(ConstructorResolver.instantiateUsingFactoryMethod)
 1. 待实例化Bean在＠Configuration中有实例化的工厂方法(mbd.getFactoryMethodName())
 2.　获取factoryBean的Class
     1)待实例化Bean有FactoryBeanName(mbd.getFactoryBeanName())，这个FactoryBeanName就是＠Configuraton的Bean Name
@@ -111,6 +111,30 @@
             v)把该BeanDefinition注册到BeanFactory
          c)处理ImportedResources和ImportedBeanDefinitionRegistrars
     注：@ComponentScan-@Component和@Import虽然在Spring中，处理上的流程不一样。但在生成BeanDefintion的功能上跟@Configuration具有可比性。它们三者都能在类里使用Bean Method来声明Bean.
+
+四、获取普通单实例Bean(scope: singleton)
+１. 根据Class Type获取Bean
+    1)查看allBeanNamesByType(Map<Class<?>, String[]> in DefaultListableBeanFactory)，是否已经有了从ClassType到BeanName的对应关系。第一次获取，关系尚未建立(DefaultListableBeanFactory.doGetBeanNamesForType)
+    2)遍历所有BeanDefinition的Name, 根据Bean Name在singletonObjects（Map<String, Object>　in DefaultSingletonBeanRegistry)中获取Bean Instance
+    3)判断Bean Instance的Class Type是否跟制定的Class Type一致，一致的话把Bean Name保存到allBeanNamesByType。第二次根据Type获取Bean就省去了１.2和１.3的步骤
+    4)使用Bean Name获取Bean Instance
+2. 根据Bean Name
+    1)直接使用1.4，从singletonObjects获取Bean Instance
+五、获取普通多实例Bean(scope: prototype)
+    1)获取Bean Name步骤和４.1.1，4.1.2，4.1.3一样
+    2)因为是prototyp类型，在singletonObjects中不能找到其实例，需要接下来动态创建
+    3)走（二、实例化＠Configuration里的Regular Bean)的流程获取实例
+六、从FactoryBean中获取Bean
+1. 根据Bean Name
+    1)从singletonObjects获取Bean Instance，但现在获取的是Bean Factory的实例，而不是需要的Bean本身
+    2)使用获得的Bean Factory Instance和其实现的getObject接口方法，创建需要的Bean
+    3)对创建的Bean Instance作后置处理
+    4)把创建的Bean Instance加入到factoryBeanObjectCache(Map<String, Object> in FactoryBeanRegistrySupport)，第二次获取的时候直接使用Bean Name从Map获取，不需要再创建
+２. 根据Factory Bean的Class Type获取
+    1)走（四.1.1，四.1.2，四.1.3）获取Factory Bean的Instance的Bean Name
+        注：FactoryBean Instance的Bean Name是加了一个前缀“＆”，以区别它将创建的Bean的Bean Name
+    2)走1.1-4的步骤获取想要的Bean
+
 
 
 
