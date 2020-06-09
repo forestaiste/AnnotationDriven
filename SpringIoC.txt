@@ -116,7 +116,7 @@
 １. 根据Class Type获取Bean
     1)查看allBeanNamesByType(Map<Class<?>, String[]> in DefaultListableBeanFactory)，是否已经有了从ClassType到BeanName的对应关系。第一次获取，关系尚未建立(DefaultListableBeanFactory.doGetBeanNamesForType)
     2)遍历所有BeanDefinition的Name, 根据Bean Name在singletonObjects（Map<String, Object>　in DefaultSingletonBeanRegistry)中获取Bean Instance
-    3)判断Bean Instance的Class Type是否跟制定的Class Type一致，一致的话把Bean Name保存到allBeanNamesByType。第二次根据Type获取Bean就省去了１.2和１.3的步骤
+    3)判断Bean Instance的Class Type是否跟传入的Class Type一致，一致的话把Bean Name保存到allBeanNamesByType。第二次根据Type获取Bean就省去了１.2和１.3的步骤
     4)使用Bean Name获取Bean Instance
 2. 根据Bean Name
     1)直接使用1.4，从singletonObjects获取Bean Instance
@@ -130,10 +130,20 @@
     2)使用获得的Bean Factory Instance和其实现的getObject接口方法，创建需要的Bean
     3)对创建的Bean Instance作后置处理
     4)把创建的Bean Instance加入到factoryBeanObjectCache(Map<String, Object> in FactoryBeanRegistrySupport)，第二次获取的时候直接使用Bean Name从Map获取，不需要再创建
-２. 根据Factory Bean的Class Type获取
-    1)走（四.1.1，四.1.2，四.1.3）获取Factory Bean的Instance的Bean Name
-        注：FactoryBean Instance的Bean Name是加了一个前缀“＆”，以区别它将创建的Bean的Bean Name
-    2)走1.1-4的步骤获取想要的Bean
+2. 根据Bean的Class Type
+    1)走（四.1.1)
+    2)遍历所有BeanDefinition的Name
+    3)如果对应BeanDefinition是一个Factory Bean，则使用Factory Bean的实例调用重载的getObjectType方法获取它能创建的类型
+    4)判断Class Type是否跟传入的Class Type一致，一致的话把Bean Name保存到allBeanNamesByType
+    5)使用Bean Name获取Bean Instance
+3. 根据Factory Bean的Class Type获取
+    1)走（四.1.1)
+    2)遍历所有BeanDefinition的Name
+    3)如果对应BeanDefinition是一个Factory Bean，则使用Factory Bean的实例调用重载的getObjectType方法获取它能创建的类型
+    4)判断Class Type是否跟传入的Class Type一致，因为传入是Factory Bean的Class Type跟getObjectType不一致
+    5)接着把该Bean Name加上前缀"&"，再次判断传入的Class Type是否和该Factory Bean的getClass一致
+        注：FactoryBean Instance的Bean Name是加了一个前缀"&"，以区别它将创建的Bean的Bean Name
+    6)一致的话就返回了FactoryBean Instance本身
 
 
 
