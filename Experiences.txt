@@ -23,6 +23,16 @@ export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
 export XMODIFIERS=@im=fcitx
 
+Java:
+查看jdk列表
+pacman -Ss jdk
+安装jdk列表中最新的jdk
+sudo pacman -S jdk-openjdk
+本机Available的jdk
+archlinux-java status
+设置缺省jdk
+sudo archlinux-java set java-10-jdk/jre
+
 mysql:
 Manjaro不再支持mysql的自动安装，只能手动安装
 1. 到Mysql网站下载Community版，https://dev.mysql.com/downloads/mysql/，Manjaro不在常用Linux列表里，下载Linux-Generic 64位即可
