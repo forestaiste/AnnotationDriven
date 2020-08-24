@@ -179,3 +179,20 @@ sudo systemctl status mysqd
 sudo systemctl enable mysqld
 # 关闭开机自启
 sudo systemctl disable mysqld
+
+mongodb
+mangaro因为版权的问题不支持mongodb自动安装，而mongodb也不再提供ArchLinux的安装包，能找到最迟的安装包的链接为https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-4.1.6.tgz
+下载后，解压后重命名文件夹为mongodb，放到/usr/local/share/。
+在mongodb下创建文件夹，data/db和文件log/mongodb.log，并使用以下命令更改权限
+sudo chmod 0755 /data/db && sudo chown $USER /data/db
+sudo chmod 0755 /log && sudo chown $USER /log
+在/etc下创建配置文件mongodb.cnf
+
+###############################################
+bpath=/usr/local/share/mongodb/data/db
+logpath=/usr/local/share/mongodb/log/mongodb.log
+fork=true
+################################################
+
+在/etc/profile添加mongodb的PATH
+export PATH=/usr/local/share/mongodb/bin:$PATH
